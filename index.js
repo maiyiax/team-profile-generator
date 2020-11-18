@@ -3,7 +3,6 @@ const fs = require('fs');
 const Manager = require('./lib//Manager.js');
 const Engineer = require('./lib/Engineer.js');
 const Intern = require('./lib/Intern.js');
-//const generatePage = require('./src/generate-html.js');
 
 // set empty arrays to hold objects
 let managerArray = [];
@@ -60,7 +59,7 @@ const promptUser = () => {
                 },
                 {
                     type: 'text',
-                    name: "office",
+                    name: "officeNumber",
                     message: "What is the Manager's office number? (required)",
                     validate: managerOfficeInput => {
                         if (managerOfficeInput) {
@@ -75,7 +74,7 @@ const promptUser = () => {
 
         .then(managerResponse => {
             // push manager information into the employee array
-            const manager = new Manager(managerResponse.name, managerResponse.id, managerResponse.email, managerResponse.office);
+            const manager = new Manager(managerResponse.name, managerResponse.id, managerResponse.email, managerResponse.officeNumber);
 
 
             managerArray.push(manager);
@@ -236,11 +235,11 @@ const generateManagerCard = () => {
                         <div class="card-body bg-light">
                             <div class="border rounded">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">ID: ${managerArray[i].id} #</li>
+                                    <li class="list-group-item">ID: ${managerArray[i].id}</li>
                                     <li class="list-group-item">
                                         Email:<a href="mailto:address@email.com" target="_blank" class="card-link"> ${managerArray[i].email}</a>
                                     </li>
-                                    <li class="list-group-item">Office Number: ${managerArray[i].office}</li>
+                                    <li class="list-group-item">Office Number: ${managerArray[i].officeNumber}</li>
                                 </ul>                   
                             </div>
                         </div>
@@ -271,7 +270,7 @@ const generateEngineerCard = () => {
                     <div class="card-body bg-light">
                         <div class="border rounded">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item">ID: ${engineerArray[j].id} #</li>
+                                <li class="list-group-item">ID: ${engineerArray[j].id}</li>
                                 <li class="list-group-item">
                                     Email:<a href="mailto:address@email.com" class="card-link"> ${engineerArray[j].email}</a>
                                 </li>
@@ -314,7 +313,7 @@ const generateInternCard = () => {
                         <div class="card-body bg-light">
                             <div class="border rounded">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">ID: ${internArray[k].id} #</li>
+                                    <li class="list-group-item">ID: ${internArray[k].id}</li>
                                     <li class="list-group-item">
                                         Email:<a href="mailto:address@email.com" class="card-link"> ${internArray[k].email}</a>
                                     </li>
@@ -337,7 +336,8 @@ const generateInternCard = () => {
 
 
 
-// end code block=========================================================================================//
+// end card code block=========================================================================================//
+
 const writeToFile = () => {
     fs.writeFile('./dist/index.html',
         `
@@ -368,7 +368,7 @@ const writeToFile = () => {
 `
         , err => {
             if (err) throw err;
-
+            
             console.log(`
         ========================
         HTML has been generated!
