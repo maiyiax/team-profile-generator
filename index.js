@@ -22,7 +22,7 @@ const promptUser = () => {
                 {
                     type: 'text',
                     name: 'name',
-                    message: "What is the manager's name?",
+                    message: "What is the manager's name? (required)",
                     validate: managerInput => {
                         if (managerInput) {
                             return true;
@@ -35,17 +35,41 @@ const promptUser = () => {
                 {
                     type: 'text',
                     name: 'id',
-                    message: "What is the Managers ID number?"
+                    message: "What is the Managers ID number? (required)",
+                    validate: managerIdInput => {
+                        if (managerIdInput) {
+                            return true;
+                        } else {
+                            console.log("You must provide a an ID number!");
+                            return false;
+                        }
+                    }
                 },
                 {
                     type: 'text',
                     name: 'email',
-                    message: "What is the Manager's email address?"
+                    message: "What is the Manager's email address? (required)",
+                    validate: managerEmailInput => {
+                        if (managerEmailInput) {
+                            return true;
+                        } else {
+                            console.log("You must provide an email address!");
+                            return false;
+                        }
+                    }
                 },
                 {
                     type: 'text',
                     name: "office",
-                    message: "What is the Manager's office number?"
+                    message: "What is the Manager's office number? (required)",
+                    validate: managerOfficeInput => {
+                        if (managerOfficeInput) {
+                            return true;
+                        } else {
+                            console.log("Please provide the Manager's office number!");
+                            return false;
+                        }
+                    }
                 }
             ])
 
@@ -94,12 +118,28 @@ const employeeQuestions = () => {
             {
                 type: 'text',
                 name: 'id',
-                message: "What is the employee's ID number?"
+                message: "What is the employee's ID number?",
+                validate: employeeIdInput => {
+                    if (employeeIdInput) {
+                        return true;
+                    } else {
+                        console.log("Please provide the employee's ID number!");
+                        return false;
+                    }
+                }
             },
             {
                 type: 'text',
                 name: 'email',
-                message: "What is the employee's email address?"
+                message: "What is the employee's email address?",
+                validate: employeeEmailInput => {
+                    if (employeeEmailInput) {
+                        return true;
+                    } else {
+                        console.log("Please provide the employee's email address!");
+                        return false;
+                    }
+                }
             }
         ])
         .then(({ role, name, id, email }) => {
@@ -180,40 +220,8 @@ const addEmployee = () => {
 
 // block of code to generate html starts===================================================//
 
-// function to generate html template
-// const generateHTML = () => {
-//     generateCards();
 
-//     `
-//         <!DOCTYPE html>
-//         <html lang="en">
-
-//         <head>
-//             <meta charset="UTF-8">
-//             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//             <title>My Team Profile</title>
-//             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-//         </head>
-
-//         <body>
-//             <header>
-//                 <h1 class="bg-danger text-white text-center m-auto">My Team</h1>
-//             </header>
-
-//             <div class='d-flex flex-wrap p-3 m-4'>
-//             ${generateCards}
-//             </div>
-//         </body>
-
-//         </html>
-
-//     `
-//     ;
-
-// };
-
-// function to generate employee cards
-
+// this function generates manager card
 let managerInfo = "";
 const generateManagerCard = () => {
     // loop through manager array
@@ -243,12 +251,14 @@ const generateManagerCard = () => {
     return managerInfo;
 };
 
-
+// this function generates engineer card
 let engineerInfo = "";
 const generateEngineerCard = () => {
-    // loop through engineer array
-    for (let j = 0; j < engineerArray.length; j++) {
-        engineerInfo = `
+    // check if the array contains anything
+    if (engineerArray != []) {
+        // if the array contains values, loop through 
+        for (let j = 0; j < engineerArray.length; j++) {
+            engineerInfo = `
             <div class="col mb-4">
 
                 <div class="card" style="width: 18rem;">
@@ -277,16 +287,21 @@ const generateEngineerCard = () => {
             </div>
 
             `
-    };
+        };
+        return engineerInfo;
+    } else {
+        engineerInfo = " ";
+    }
     return engineerInfo;
 };
 
-
+// this function generates the intern card
 let internInfo = "";
 const generateInternCard = () => {
-    // loop through intern array
-    for (let k = 0; k < internArray.length; k++) {
-        internInfo = `
+    if (internArray != []) {
+        // loop through intern array
+        for (let k = 0; k < internArray.length; k++) {
+            internInfo = `
                 <div class="col mb-4">
     
                     <div class="card" style="width: 18rem;">
@@ -312,7 +327,11 @@ const generateInternCard = () => {
     
                 </div>
                 `
-    };
+        };
+        return internInfo;
+    } else {
+        internInfo = " ";
+    }
     return internInfo;
 };
 
