@@ -3,8 +3,10 @@ const fs = require('fs');
 const Manager = require('./lib//Manager.js');
 const Engineer = require('./lib/Engineer.js');
 const Intern = require('./lib/Intern.js');
-const generateHTML = require('./src/generate-html');
-const { rejects } = require('assert');
+const { generateManagerCard, generateEngineerCard, generateInternCard, generateHTML } = require('./src/generate-html.js');
+
+// set empty arrays to hold objects
+let employeeArray = [];
 
 // WHEN I start the application
 // THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number
@@ -30,7 +32,7 @@ function promptUser() {
                 },
                 {
                     type: 'text',
-                    name: 'ID',
+                    name: 'id',
                     message: "What is the Managers ID number?"
                 },
                 {
@@ -44,6 +46,15 @@ function promptUser() {
                     message: "What is the Manager's office number?"
                 }
             ])
+        
+        .then(managerResponse => {
+            // push manager information into the employee array
+            const manager = new Manager(managerResponse.name, managerResponse.id, managerResponse.email, managerResponse.office);
+            
+
+            employeeArray.push(manager);
+
+        })
 
         // WHEN I enter the team manager’s name, employee ID, email address, and office number
         // THEN I am presented with a menu with the option to add an engineer or an intern or to finish building my team
@@ -80,7 +91,7 @@ function employeeQuestions() {
             },
             {
                 type: 'text',
-                name: 'ID',
+                name: 'id',
                 message: "What is the employee's ID number?"
             },
             {
@@ -89,7 +100,7 @@ function employeeQuestions() {
                 message: "What is the employee's email address?"
             }
         ])
-        .then(({ role }) => {
+        .then(({ role, name, id, email }) => {
 
             // if engineer was selected
             if (role === 'Engineer') {
@@ -107,7 +118,11 @@ function employeeQuestions() {
                             }
                         }
                     }
-                ])
+                ]).then(({github}) => {
+                    const engineer = new Engineer(name, id, email, github);
+                    
+                    employeeArray.push(engineer);
+                });
 
                 // if intern was selected
             } else {
@@ -125,6 +140,11 @@ function employeeQuestions() {
                         }
                     }
                 ])
+                .then(({school}) => {
+                    const intern = new Intern(name, id, email, school);
+
+                    employeeArray.push(intern);
+                });
             }
         })
         // check if the user wants to add another employee
@@ -142,9 +162,14 @@ function addEmployee() {
     .then(({ add }) => {
         // if user chooses to add another employee, then prompt employee questions again
         if (add) {
+            console.log(`
+            ====================
+            Add Another Employee
+            ====================
+            `)
             return employeeQuestions();
 
-            // if there are no more employees, generate the html
+        // if there are no more employees, generate the html
         } else {
             generateHTML();
             writeToFile();
@@ -155,12 +180,15 @@ function addEmployee() {
 // function to generate html file
 const writeToFile = data => {
     fs.writeFile('./dist/index.html', data, err => {
-        if (err) {
-            reject(err);
-            return;
-        }
+        if (err) throw err;
 
-        console.log("HTML has been generated!")
+        console.log(`
+        ========================
+        HTML has been generated!
+        ========================
+        `)
+
+        console.log(employeeArray);
     });
 };
 
